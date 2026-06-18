@@ -1,0 +1,24 @@
+{
+  "name": "kalit-code-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared agent engine for kalit-code front-ends (CLI + desktop). Wraps the Claude Agent SDK pointed at a kalit-model-server gateway.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.2.69",
+    "@anthropic-ai/claude-code": "^2.1.69"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}
