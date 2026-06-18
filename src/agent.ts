@@ -70,6 +70,14 @@ function applyEnv(cfg: AgentConfig): void {
   process.env.ANTHROPIC_BASE_URL = cfg.serverUrl;
   process.env.ANTHROPIC_AUTH_TOKEN = cfg.token;
   process.env.ANTHROPIC_API_KEY = cfg.token;
+  // Claude Code uses separate "default" models for auxiliary calls (titles,
+  // compaction, quick ops). Point them ALL at our gateway model so it never
+  // tries an unknown Claude model name like "claude-opus-4-7".
+  process.env.ANTHROPIC_MODEL = cfg.model;
+  process.env.ANTHROPIC_SMALL_FAST_MODEL = cfg.model;
+  process.env.ANTHROPIC_DEFAULT_HAIKU_MODEL = cfg.model;
+  process.env.ANTHROPIC_DEFAULT_SONNET_MODEL = cfg.model;
+  process.env.ANTHROPIC_DEFAULT_OPUS_MODEL = cfg.model;
   delete (process.env as Record<string, unknown>).CLAUDECODE;
 }
 
