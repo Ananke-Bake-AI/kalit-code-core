@@ -12,9 +12,19 @@
 // works from both ESM (CLI/tsx) and CommonJS (Electron main) consumers.
 type QueryFn = (args: { prompt: string; options: Record<string, unknown> }) => AsyncIterable<Record<string, unknown>>;
 let queryFn: QueryFn | null = null;
+
+// IMPORTANT: keep a REAL runtime import(). When this module is compiled to
+// CommonJS, `tsc` would otherwise rewrite `await import(...)` into a `require()`,
+// which throws `ERR_REQUIRE_ESM` for the ESM-only SDK under plain Node/Electron
+// (it only "works" under tsx, which tolerates require() of ESM). The Function
+// indirection hides the import() from the compiler so it stays a dynamic import.
+const dynamicImport = new Function('specifier', 'return import(specifier)') as (
+  specifier: string,
+) => Promise<{ query: unknown }>;
+
 async function getQuery(): Promise<QueryFn> {
   if (!queryFn) {
-    const sdk = await import('@anthropic-ai/claude-agent-sdk');
+    const sdk = await dynamicImport('@anthropic-ai/claude-agent-sdk');
     queryFn = sdk.query as unknown as QueryFn;
   }
   return queryFn;
